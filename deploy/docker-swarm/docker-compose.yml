@@ -67,6 +67,3 @@ services:
     image: weaveworksdemos/user-db:0.4.0
     environment:
       - reschedule=on-node-failure
-  user-sim:
-    image: weaveworksdemos/load-test:0.1.1
-    command: "-d 60 -r 200 -c 2 -h front-end:8079"
