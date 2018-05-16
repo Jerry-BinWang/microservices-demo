@@ -7,10 +7,18 @@ services:
       - '80:8079'
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   catalogue:
     image: weaveworksdemos/catalogue:0.3.5
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   catalogue-db:
     image: weaveworksdemos/catalogue-db:0.3.0
     environment:
@@ -18,29 +26,53 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_DATABASE=socksdb
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
   carts:
     image: weaveworksdemos/carts:0.4.8
     environment:
       - reschedule=on-node-failure
       - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   carts-db:
     image: mongo:3.4
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
   orders:
     image: weaveworksdemos/orders:0.4.7
     environment:
       - reschedule=on-node-failure
       - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   orders-db:
     image: mongo:3.4
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
   shipping:
     image: weaveworksdemos/shipping:0.4.8
     environment:
       - reschedule=on-node-failure
       - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   # @pidster: I've added this back in a comment, because I don't know why it is missing from this file
   # queue-master:
   #   image: weaveworksdemos/queue-master:0.3.1
@@ -54,16 +86,32 @@ services:
     image: rabbitmq:3.6.8
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
   payment:
     image: weaveworksdemos/payment:0.4.3
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   user:
     image: weaveworksdemos/user:0.4.4
     environment:
       - MONGO_HOST=user-db:27017
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == application
   user-db:
     image: weaveworksdemos/user-db:0.4.0
     environment:
       - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
