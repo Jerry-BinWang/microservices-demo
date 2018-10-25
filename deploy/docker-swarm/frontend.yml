@@ -1,0 +1,76 @@
+version: "3.2"
+
+services:
+  front-end:
+    image: weaveworksdemos/front-end:0.3.12
+    ports:
+      - target: 8079
+        published: 80
+        protocol: tcp
+        mode: host
+    environment:
+      - reschedule=on-node-failure
+      - SESSION_REDIS=true
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  catalogue:
+    image: weaveworksdemos/catalogue:0.3.5
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  carts:
+    image: weaveworksdemos/carts:0.4.8
+    environment:
+      - reschedule=on-node-failure
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  orders:
+    image: weaveworksdemos/orders:0.4.7
+    environment:
+      - reschedule=on-node-failure
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  shipping:
+    image: weaveworksdemos/shipping:0.4.8
+    environment:
+      - reschedule=on-node-failure
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  payment:
+    image: weaveworksdemos/payment:0.4.3
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}
+  user:
+    image: weaveworksdemos/user:0.4.4
+    environment:
+      - MONGO_HOST=user-db:27017
+      - reschedule=on-node-failure
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.hostname == {{hostname}}

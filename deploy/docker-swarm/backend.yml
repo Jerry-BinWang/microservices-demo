@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  catalogue-db:
+    image: weaveworksdemos/catalogue-db:0.3.0
+    environment:
+      - reschedule=on-node-failure
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=socksdb
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
+  carts-db:
+    image: mongo:3.4
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
+  orders-db:
+    image: mongo:3.4
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
+  rabbitmq:
+    image: rabbitmq:3.6.8
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
+  user-db:
+    image: weaveworksdemos/user-db:0.4.0
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
+  session-db:
+    image: redis:alpine
+    environment:
+      - reschedule=on-node-failure
+    deploy:
+      placement:
+        constraints:
+          - node.labels.role == database
